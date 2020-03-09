@@ -32,7 +32,7 @@ public class XQueryGenerator extends XQueryGeneratorBase {
     private String qvarConstraint = "";
     private String qvarMapVariable = "";
     private Map<String, ArrayList<String>> qvar = new LinkedHashMap<>();
-    }   
+    
     /**
      * Constructs a basic generator from an XML document given as a string.
      *

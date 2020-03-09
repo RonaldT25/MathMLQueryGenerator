@@ -32,7 +32,7 @@ public class XQueryGenerator extends XQueryGeneratorBase {
     private String qvarConstraint = "";
     private String qvarMapVariable = "";
     private Map<String, ArrayList<String>> qvar = new LinkedHashMap<>();
-
+    }   
     /**
      * Constructs a basic generator from an XML document given as a string.
      *
@@ -58,7 +58,52 @@ public class XQueryGenerator extends XQueryGeneratorBase {
         super.generateConstraints();
         generateQvarConstraints();
     }
+    public String getNamespace() {
+        return namespace;
+    }
 
+    public XQueryGenerator setNamespace(String namespace) {
+        this.namespace = namespace;
+        return this;
+    }
+
+    public Map<String, ArrayList<String>> getQvar() {
+        if (qvar.isEmpty()) {
+            generateConstraints();
+        }
+        return qvar;
+    }
+    public boolean isAddQvarMap() {
+        return addQvarMap;
+    }
+
+    public String getReturnFormat() {
+        return returnFormat;
+    }
+
+    public XQueryGenerator setReturnFormat(String returnFormat) {
+        this.returnFormat = returnFormat;
+        return this;
+    }
+    public XQueryGenerator setAddQvarMap(boolean addQvarMap) {
+        this.addQvarMap = addQvarMap;
+        return this;
+    }
+
+    public boolean isRestrictLength() {
+        return restrictLength;
+    }
+  public String toString() {
+        if (mainElement == null) {
+            return null;
+        }
+        generateConstraints();
+        if (findRootApply) {
+            return getRecursiveString();
+        } else {
+            return getDefaultString();
+        }
+    }
     /**
      * Uses the qvar map to generate a XQuery string containing qvar constraints,
      * and the qvar map variable which maps qvar names to their respective formula ID's in the result.
@@ -138,21 +183,6 @@ public class XQueryGenerator extends XQueryGeneratorBase {
         return outBuilder.toString();
     }
 
-    public String getNamespace() {
-        return namespace;
-    }
-
-    public XQueryGenerator setNamespace(String namespace) {
-        this.namespace = namespace;
-        return this;
-    }
-
-    public Map<String, ArrayList<String>> getQvar() {
-        if (qvar.isEmpty()) {
-            generateConstraints();
-        }
-        return qvar;
-    }
 
     /**
      * Builds the XQuery as a string. Uses the recursive format of recursively looping through the documents.
@@ -191,14 +221,6 @@ public class XQueryGenerator extends XQueryGeneratorBase {
         return outBuilder.toString();
     }
 
-    public String getReturnFormat() {
-        return returnFormat;
-    }
-
-    public XQueryGenerator setReturnFormat(String returnFormat) {
-        this.returnFormat = returnFormat;
-        return this;
-    }
 
     protected boolean handleSpecialElements(Node child, Integer childElementIndex) {
         if (!"mws:qvar".equals(child.getNodeName())) {
@@ -217,21 +239,11 @@ public class XQueryGenerator extends XQueryGeneratorBase {
         return true;
     }
 
-    public boolean isAddQvarMap() {
-        return addQvarMap;
-    }
+
 
     /**
      * Determines whether or not the $q variable is generated with a map of qvar names to their respective xml:id
      */
-    public XQueryGenerator setAddQvarMap(boolean addQvarMap) {
-        this.addQvarMap = addQvarMap;
-        return this;
-    }
-
-    public boolean isRestrictLength() {
-        return restrictLength;
-    }
 
     /**
      * If set to true a query like $x+y$ does not match $x+y+z$.
@@ -277,15 +289,5 @@ public class XQueryGenerator extends XQueryGeneratorBase {
      *
      * @return XQuery as string. Returns null if no main element set.
      */
-    public String toString() {
-        if (mainElement == null) {
-            return null;
-        }
-        generateConstraints();
-        if (findRootApply) {
-            return getRecursiveString();
-        } else {
-            return getDefaultString();
-        }
-    }
+  
 }
